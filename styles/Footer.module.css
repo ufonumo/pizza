@@ -43,8 +43,9 @@
       display: none;
     }
   
-    .item {
+    .item , .item:last-child{
       flex-direction: column;
+      padding: 0;
     }
   
     .title {
