@@ -1,15 +1,25 @@
 import Product from "../../../models/Product";
 import dbConnect from "../../../utils/mongo";
-
+import cookie from 'cookie'
 export default async function handler(req, res) {
    const {method, query:{id} } = req;
 
    dbConnect()
 
-   if (method === 'GET'){
+   if (method === 'POST'){
      try {
-         const product = await Product.findById(id);
-         res.status(200).json(product);
+         const {username, password} = req.body;
+        if(username === process.env.USERNAME && process.env.password === PASSWORD){
+            res.setHeaders('Set-Cookie', cookie.serialize('token', process.env.TOKEN,{
+                maxAge: 60 * 60,
+                path: '/',	
+                sameSite: 'strict',
+            })) 
+            res.status(200).json('You are logged in');
+        } else {
+            res.status(401).json('Oops!!, invalid login credentials ');
+        }
+
      } catch (error) {
         res.status(500).json({
             message: error.message,
